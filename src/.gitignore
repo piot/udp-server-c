@@ -1,0 +1,15 @@
+.vscode/
+.idea/
+build/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+udp-server-example
+
