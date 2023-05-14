@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
 	udpServerStartup();
 
-	int errorCode = udpServerInit(&socket, 27000);
+	int errorCode = udpServerInit(&socket, 27000, true);
 	if (errorCode < 0) {
 		CLOG_WARN("could not init %d", errorCode);
 		return errorCode;

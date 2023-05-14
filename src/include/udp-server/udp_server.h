@@ -15,6 +15,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #endif
+#include <sys/types.h>
 #include <stdbool.h>
 
 typedef struct UdpServerSocket {
@@ -26,6 +27,6 @@ int udpServerStartup(void);
 
 int udpServerInit(UdpServerSocket* self, uint16_t port, bool blocking);
 int udpServerSend(UdpServerSocket* self, const uint8_t* data, size_t size, const struct sockaddr_in* peer_address);
-int udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t* size, struct sockaddr_in* peer_address);
+ssize_t udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t* size, struct sockaddr_in* peer_address);
 
 #endif

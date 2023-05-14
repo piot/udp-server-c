@@ -136,7 +136,7 @@ int udpServerSend(UdpServerSocket* self, const uint8_t* data, size_t size, const
 #define UDP_SERVER_GET_ERROR errno
 #endif
 
-int udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t* size, struct sockaddr_in* peer_address)
+ssize_t udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t* size, struct sockaddr_in* peer_address)
 {
     socklen_t addr_size = sizeof(struct sockaddr_in);
     ssize_t number_of_octets = recvfrom(self->handle, (char*) data, *size, 0, (struct sockaddr*) peer_address,
