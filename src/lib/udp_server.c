@@ -19,6 +19,29 @@ typedef int socklen_t;
 #include <fcntl.h>
 #include <stdbool.h>
 
+
+#if defined TORNADO_OS_WINDOWS
+#define UDP_SERVER_SOCKET_HANDLE SOCKET SOCKET
+//#define UDP_SERVER_SOCKET_CLOSE closesocket
+//#define UDP_SERVER_ERROR_INPROGRESS WSAEINPROGRESS
+#define UDP_SERVER_ERROR_WOULDBLOCK WSAEWOULDBLOCK
+#define UDP_SERVER_ERROR_AGAIN WSAEINPROGRESS
+//#define UDP_SERVER_ERROR_NOT_CONNECTED WSAENOTCONN
+#define UDP_SERVER_GET_ERROR WSAGetLastError()
+#else
+//#define UDP_SERVER_SHUTDOWN_READ_WRITE SHUT_RDWR
+//#define UDP_SERVER_ERROR_INPROGRESS EINPROGRESS
+#define UDP_SERVER_ERROR_WOULDBLOCK EINPROGRESS
+#define UDP_SERVER_ERROR_AGAIN EAGAIN
+#define UDP_SERVER_SOCKET_HANDLE int
+//#define UDP_SERVER_INVALID_SOCKET_HANDLE (-1)
+#include <errno.h>
+#include <unistd.h>
+//#define UDP_SERVER_SOCKET_CLOSE close
+#define UDP_SERVER_GET_ERROR errno
+#endif
+
+
 static int setSocketNonBlocking(int handle, bool nonBlocking)
 {
 #if defined TORNADO_OS_WINDOWS
@@ -61,7 +84,7 @@ int udpServerStartup(void)
 
 static int udpServerCreate(bool blocking)
 {
-    int handle = socket(PF_INET, SOCK_DGRAM, 0);
+    UDP_SERVER_SOCKET_HANDLE handle = socket(PF_INET, SOCK_DGRAM, 0);
 
     if (!blocking) {
         setSocketNonBlocking(handle, true);
@@ -69,7 +92,7 @@ static int udpServerCreate(bool blocking)
     return handle;
 }
 
-static int udpServerBind(int handle, in_port_t port)
+static int udpServerBind(UDP_SERVER_SOCKET_HANDLE handle, in_port_t port)
 {
     struct sockaddr_in servaddr;
 
@@ -115,26 +138,6 @@ int udpServerSend(UdpServerSocket* self, const uint8_t* data, size_t size, const
     return ((size_t) number_of_octets_sent == size);
 }
 
-#if defined TORNADO_OS_WINDOWS
-//#define UDP_SERVER_SOCKET_HANDLE SOCKET
-//#define UDP_SERVER_SOCKET_CLOSE closesocket
-//#define UDP_SERVER_ERROR_INPROGRESS WSAEINPROGRESS
-#define UDP_SERVER_ERROR_WOULDBLOCK WSAEWOULDBLOCK
-#define UDP_SERVER_ERROR_AGAIN WSAEINPROGRESS
-//#define UDP_SERVER_ERROR_NOT_CONNECTED WSAENOTCONN
-#define UDP_SERVER_GET_ERROR WSAGetLastError()
-#else
-//#define UDP_SERVER_SHUTDOWN_READ_WRITE SHUT_RDWR
-//#define UDP_SERVER_ERROR_INPROGRESS EINPROGRESS
-#define UDP_SERVER_ERROR_WOULDBLOCK EINPROGRESS
-#define UDP_SERVER_ERROR_AGAIN EAGAIN
-//#define UDP_SERVER_SOCKET_HANDLE int
-//#define UDP_SERVER_INVALID_SOCKET_HANDLE (-1)
-#include <errno.h>
-#include <unistd.h>
-//#define UDP_SERVER_SOCKET_CLOSE close
-#define UDP_SERVER_GET_ERROR errno
-#endif
 
 ssize_t udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t dataMaxSize, struct sockaddr_in* peer_address)
 {

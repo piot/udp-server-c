@@ -104,6 +104,8 @@ elseif(COMPILER_MSVC)
     PRIVATE /Wall
             /WX
             # /F 5000000 # stack size
+            /wd4820 # bytes padding added after data member
+            /wd4668 # bug in winioctl.h (is not defined as a preprocessor macro, replacing with '0' for '#if/#elif')
           )
 else()
   target_compile_options(udp-server PRIVATE -Wall)
