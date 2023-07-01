@@ -21,13 +21,14 @@ typedef int socklen_t;
 
 
 #if defined TORNADO_OS_WINDOWS
-#define UDP_SERVER_SOCKET_HANDLE SOCKET SOCKET
+#define UDP_SERVER_SOCKET_HANDLE SOCKET
 //#define UDP_SERVER_SOCKET_CLOSE closesocket
 //#define UDP_SERVER_ERROR_INPROGRESS WSAEINPROGRESS
 #define UDP_SERVER_ERROR_WOULDBLOCK WSAEWOULDBLOCK
 #define UDP_SERVER_ERROR_AGAIN WSAEINPROGRESS
 //#define UDP_SERVER_ERROR_NOT_CONNECTED WSAENOTCONN
 #define UDP_SERVER_GET_ERROR WSAGetLastError()
+#define UDP_SERVER_SIZE_CAST(a) (int) a
 #else
 //#define UDP_SERVER_SHUTDOWN_READ_WRITE SHUT_RDWR
 //#define UDP_SERVER_ERROR_INPROGRESS EINPROGRESS
@@ -39,6 +40,7 @@ typedef int socklen_t;
 #include <unistd.h>
 //#define UDP_SERVER_SOCKET_CLOSE close
 #define UDP_SERVER_GET_ERROR errno
+#define UDP_SERVER_SIZE_CAST(a) a
 #endif
 
 
@@ -128,7 +130,7 @@ int udpServerInit(UdpServerSocket* self, uint16_t port, bool blocking)
 
 int udpServerSend(UdpServerSocket* self, const uint8_t* data, size_t size, const struct sockaddr_in* peer_address)
 {
-    ssize_t number_of_octets_sent = sendto(self->handle, (const char*) data, size, 0,
+    ssize_t number_of_octets_sent = sendto(self->handle, (const char*) data, UDP_SERVER_SIZE_CAST(size), 0,
                                            (const struct sockaddr*) peer_address, sizeof(struct sockaddr_in));
     if (number_of_octets_sent < 0) {
         CLOG_WARN("udpServerSend: error send %zd", number_of_octets_sent)
@@ -142,7 +144,7 @@ int udpServerSend(UdpServerSocket* self, const uint8_t* data, size_t size, const
 ssize_t udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t dataMaxSize, struct sockaddr_in* peer_address)
 {
     socklen_t addr_size = sizeof(struct sockaddr_in);
-    ssize_t number_of_octets = recvfrom(self->handle, (char*) data, dataMaxSize, 0, (struct sockaddr*) peer_address,
+    ssize_t number_of_octets = recvfrom(self->handle, (char*) data, UDP_SERVER_SIZE_CAST(dataMaxSize), 0, (struct sockaddr*) peer_address,
                                         &addr_size);
     if (number_of_octets < 0) {
         if (number_of_octets == -1 && !self->isBlocking) {

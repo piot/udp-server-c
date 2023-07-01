@@ -54,7 +54,6 @@ elseif(UNIX)
 elseif(WIN32)
   target_compile_definitions(udp-server PRIVATE TORNADO_OS_WINDOWS)
   set(OS_WINDOWS 1)
-
 endif()
 
 if(isDebug)
@@ -69,10 +68,11 @@ endfunction()
 if(OS_LINUX)
   message("Linux Detected!")
   unixlike()
-
 elseif(OS_MACOS)
   message("MacOS detected!")
   unixlike()
+elseif(OS_WINDOWS)
+  message("Windows detected!")
 endif()
 
 target_include_directories(udp-server PUBLIC ../include)
