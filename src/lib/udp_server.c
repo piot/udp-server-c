@@ -81,7 +81,7 @@ static int udpServerBind(int handle, in_port_t port)
 
     int result;
     if ((result = bind(handle, (const struct sockaddr*) &servaddr, sizeof(servaddr))) < 0) {
-        CLOG_WARN("udpServerBind: could not bind to port %d", port);
+        CLOG_WARN("udpServerBind: could not bind to port %d", port)
         return result;
     }
 
@@ -98,7 +98,7 @@ int udpServerInit(UdpServerSocket* self, uint16_t port, bool blocking)
         return result;
     }
 
-    CLOG_INFO("udpServerInit: listening to port %d", port);
+    CLOG_INFO("udpServerInit: listening to port %d", port)
 
     return 0;
 }
