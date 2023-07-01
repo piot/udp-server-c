@@ -87,7 +87,7 @@ if(COMPILER_CLANG)
                                              # even if std=c99
             -Wno-unsafe-buffer-usage # unclear why it fails on clang-16
             -Wno-unknown-warning-option # support newer clang versions, e.g. clang-16
-            -Wno-disabled-macro-expansion
+            -Wno-disabled-macro-expansion # bug in emscripten compiler?
             ${sanitizers})
 elseif(COMPILER_GCC)
 target_compile_options(
@@ -101,26 +101,10 @@ target_compile_options(
 elseif(COMPILER_MSVC)
   target_compile_options(
     udp-server
-    PRIVATE /F
-            5000000
-            /Wall
-            /wd4668
-            /wd4820
-            /wd4100
-            /wd4710
-            /wd4711
-            /wd5945
-            /wd5105
-            /wd5045
-            /we4047
-            /we4255
-            /we4013
-            /we4020
-            /we4474
-            /we4477
-            /we4057
-            /we4101
-            /we4189) # /WX
+    PRIVATE /Wall
+            /WX
+            # /F 5000000 # stack size
+          )
 else()
   target_compile_options(udp-server PRIVATE -Wall)
 endif()
