@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#if TORNADO_OS_WINDOWS
+#ifdef TORNADO_OS_WINDOWS
 #include <WinSock2.h>
 #include <Windows.h>
 #else
@@ -27,6 +27,6 @@ int udpServerStartup(void);
 
 int udpServerInit(UdpServerSocket* self, uint16_t port, bool blocking);
 int udpServerSend(UdpServerSocket* self, const uint8_t* data, size_t size, const struct sockaddr_in* peer_address);
-ssize_t udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t* size, struct sockaddr_in* peer_address);
+ssize_t udpServerReceive(UdpServerSocket* self, uint8_t* data, size_t maxSize, struct sockaddr_in* peer_address);
 
 #endif
