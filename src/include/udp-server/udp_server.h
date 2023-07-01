@@ -24,6 +24,11 @@
 #define UDP_SERVER_SOCKET_HANDLE int
 #endif
 
+/// Maximum size is 1200, since the general recommendations are somewhere between 1200 and 1400 octets.
+/// (https://www.ietf.org/id/draft-ietf-dnsop-avoid-fragmentation-06.html#section-3.3).
+/// Steam Networking has a 1200 octet packet size limit (https://partner.steamgames.com/doc/api/ISteamNetworking)
+static const size_t UDP_SERVER_MAX_OCTET_SIZE = 1200;
+
 typedef struct UdpServerSocket {
     UDP_SERVER_SOCKET_HANDLE handle;
     bool isBlocking;
