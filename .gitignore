@@ -13,3 +13,5 @@ Makefile
 *.a
 *.cmake
 CMakeCache.txt
+src/CMakeScripts
+src/udp-server-example.xcodeproj
