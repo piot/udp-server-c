@@ -92,7 +92,7 @@ static UDP_SERVER_SOCKET_HANDLE udpServerCreate(bool blocking)
     return handle;
 }
 
-static UDP_SERVER_SOCKET_HANDLE udpServerBind(UDP_SERVER_SOCKET_HANDLE handle, in_port_t port)
+static int udpServerBind(UDP_SERVER_SOCKET_HANDLE handle, in_port_t port)
 {
     struct sockaddr_in servaddr;
 
@@ -116,9 +116,9 @@ int udpServerInit(UdpServerSocket* self, uint16_t port, bool blocking)
     self->handle = udpServerCreate(blocking);
     self->isBlocking = blocking;
 
-    UDP_SERVER_SOCKET_HANDLE result;
+    int result;
     if ((result = udpServerBind(self->handle, port)) < 0) {
-        return (int) result;
+        return result;
     }
 
     CLOG_INFO("udpServerInit: listening to port %d", port)
