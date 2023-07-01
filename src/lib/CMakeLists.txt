@@ -106,6 +106,7 @@ elseif(COMPILER_MSVC)
             # /F 5000000 # stack size
             /wd4820 # bytes padding added after data member
             /wd4668 # bug in winioctl.h (is not defined as a preprocessor macro, replacing with '0' for '#if/#elif')
+            /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
           )
 else()
   target_compile_options(udp-server PRIVATE -Wall)
