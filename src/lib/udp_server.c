@@ -21,7 +21,6 @@ typedef int socklen_t;
 
 
 #if defined TORNADO_OS_WINDOWS
-#define UDP_SERVER_SOCKET_HANDLE SOCKET
 //#define UDP_SERVER_SOCKET_CLOSE closesocket
 //#define UDP_SERVER_ERROR_INPROGRESS WSAEINPROGRESS
 #define UDP_SERVER_ERROR_WOULDBLOCK WSAEWOULDBLOCK
@@ -34,7 +33,6 @@ typedef int socklen_t;
 //#define UDP_SERVER_ERROR_INPROGRESS EINPROGRESS
 #define UDP_SERVER_ERROR_WOULDBLOCK EINPROGRESS
 #define UDP_SERVER_ERROR_AGAIN EAGAIN
-#define UDP_SERVER_SOCKET_HANDLE int
 //#define UDP_SERVER_INVALID_SOCKET_HANDLE (-1)
 #include <errno.h>
 #include <unistd.h>
@@ -44,7 +42,7 @@ typedef int socklen_t;
 #endif
 
 
-static int setSocketNonBlocking(int handle, bool nonBlocking)
+static int setSocketNonBlocking(UDP_SERVER_SOCKET_HANDLE handle, bool nonBlocking)
 {
 #if defined TORNADO_OS_WINDOWS
     u_long mode = nonBlocking ? 1U : 0U;
@@ -84,7 +82,7 @@ int udpServerStartup(void)
 #endif
 }
 
-static int udpServerCreate(bool blocking)
+static UDP_SERVER_SOCKET_HANDLE udpServerCreate(bool blocking)
 {
     UDP_SERVER_SOCKET_HANDLE handle = socket(PF_INET, SOCK_DGRAM, 0);
 
@@ -94,7 +92,7 @@ static int udpServerCreate(bool blocking)
     return handle;
 }
 
-static int udpServerBind(UDP_SERVER_SOCKET_HANDLE handle, in_port_t port)
+static UDP_SERVER_SOCKET_HANDLE udpServerBind(UDP_SERVER_SOCKET_HANDLE handle, in_port_t port)
 {
     struct sockaddr_in servaddr;
 

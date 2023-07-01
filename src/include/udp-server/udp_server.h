@@ -18,8 +18,14 @@
 #include <sys/types.h>
 #include <stdbool.h>
 
+#if defined TORNADO_OS_WINDOWS
+#define UDP_SERVER_SOCKET_HANDLE SOCKET
+#else
+#define UDP_SERVER_SOCKET_HANDLE int
+#endif
+
 typedef struct UdpServerSocket {
-    int handle;
+    UDP_SERVER_SOCKET_HANDLE handle;
     bool isBlocking;
 } UdpServerSocket;
 
