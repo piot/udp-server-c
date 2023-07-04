@@ -62,15 +62,10 @@ if(isDebug)
 endif()
 
 
-function(unixlike)
-endfunction()
-
 if(OS_LINUX)
   message("Linux Detected!")
-  unixlike()
 elseif(OS_MACOS)
   message("MacOS detected!")
-  unixlike()
 elseif(OS_WINDOWS)
   message("Windows detected!")
 endif()
@@ -88,6 +83,7 @@ if(COMPILER_CLANG)
             -Wno-unsafe-buffer-usage # unclear why it fails on clang-16
             -Wno-unknown-warning-option # support newer clang versions, e.g. clang-16
             -Wno-disabled-macro-expansion # bug in emscripten compiler?
+            -Wno-poison-system-directories # might be bug in emscripten compiler?
             ${sanitizers})
 elseif(COMPILER_GCC)
 target_compile_options(
@@ -107,6 +103,7 @@ elseif(COMPILER_MSVC)
             /wd4820 # bytes padding added after data member
             /wd4668 # bug in winioctl.h (is not defined as a preprocessor macro, replacing with '0' for '#if/#elif')
             /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+            /wd4005 # Bug in ntstatus.h (macro redefinition)
           )
 else()
   target_compile_options(udp-server PRIVATE -Wall)
@@ -123,8 +120,4 @@ endif()
 if(NOT isDebug)
   message("optimize!")
   target_compile_options(udp-server PRIVATE -O3)
-endif()
-
-if (NOT MSVC)
-target_link_libraries(udp-server PRIVATE m)
 endif()
