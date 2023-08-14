@@ -2,8 +2,8 @@
  *  Copyright (c) Peter Bjorklund. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-#ifndef udp_server_h
-#define udp_server_h
+#ifndef UDP_SERVER_H
+#define UDP_SERVER_H
 
 #include <stdint.h>
 #include <stdlib.h>
